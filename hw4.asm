@@ -41,3 +41,4 @@ recursiveFindLoneElement:
 
 ### Data Section ###
 .data
+	buffer: .space 32
