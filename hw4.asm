@@ -19,11 +19,20 @@ itof:
 	
 makeAsciiLoop:
 	blez $a0, checkNegative		# while( $a0 > 0 )
-	
-	jr $ra
+	li $t2, 10			# for dividing. t2 can be reused
+	div $a0, $t2			# Divide $a0 by 10
+	mflo $a0			# save the quotient back into a0
+	mfhi $t2			# put the remainder in t2
+	addi $t2, $t2, 48		# make t2 ascii
+	# Make room on the stack for one BYTE and store the byte to the
+# address
+	addi $t0, $t0, 1		# Increment the counter for number of digits
+	j makeAsciiLoop
 
 checkNegative:
 
+	jr $ra
+	
 #Part 2
 
 #bears function
