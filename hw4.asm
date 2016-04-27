@@ -8,33 +8,46 @@
 
 #itof function
 itof:
-  jr $ra
+	li $t0, 0			# Number_of_digits = 0
+	li $t1, 0			# negative = false
+	bgez $a0, makeAsciiLoop		# if number isnt negative
+	# If number is negative:
+	li $t1, 1			# negative = true
+	li $t2, 0xffffffff		# for subtraction. t2 can be reused
+	sub $a0, $t2, $a0		# make a0 possitive 
+	addi $a0, $a0, 1		# make it twos compliment
+	
+makeAsciiLoop:
+	blez $a0, checkNegative		# while( $a0 > 0 )
+	
+	jr $ra
 
+checkNegative:
 
 #Part 2
 
 #bears function
 bears:
-  jr $ra
+	jr $ra
 
 
 #Part 3
 
 #recursiveFindMajorityElement function
 recursiveFindMajorityElement:
-  jr $ra
+	jr $ra
 
 
 #iterateCandidates function
 iterateCandidates:
-  jr $ra
+	jr $ra
 
 
 #Part 4
 
 #recursiveFindLoneElement function
 recursiveFindLoneElement:
-  jr $ra
+	jr $ra
 
 
 
