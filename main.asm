@@ -11,7 +11,7 @@ main:
 	move $s7, $v0		# save the file descriptor
 	move $a1, $v0		# save the file descriptor to go into functions
 	
-	li $a0, -123		# store the int to write in a0
+	li $a0, 123		# store the int to write in a0
 	jal itof		# do the first function
 	
 	li   $v0, 16		# system call for close file
