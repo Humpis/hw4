@@ -252,10 +252,8 @@ bearsDone:
 	lw $s3, 4($sp)			# restore from stack
 	lw $s4, 0($sp)			# restore from stack
 	addi $sp, $sp, 24		# restore space on stack to store 4 bytes
-	
 	jr $ra
-
-
+	
 #Part 3
 
 #recursiveFindMajorityElement function
