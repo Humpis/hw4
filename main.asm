@@ -12,9 +12,7 @@ main:
 	move $a1, $v0		# save the file descriptor to go into functions
 	
 	li $a0, 23330		# store the int to write in a0
-	jal itof		# do the first function
-	
-
+	#jal itof		# do the first function
 	
 	# part 2
 	li $a0, 99		#  initial Number of bears given by your friend 
@@ -23,8 +21,19 @@ main:
 	li $a3, 4		# n The number of steps left in the game
 	addi $sp, $sp, -4	# make space on stack to store 4 bytes
 	sw $s7, 0($sp)		# save fd on stack
-	jal bears
+	#jal bears
 	addi $sp, $sp, 4	# restore space on the stack
+	
+	#part 3
+	la $a0, list		# input_array Integer array
+	li $a1, 4		# candidate Integer being searched for in the array
+	li $a2, 0		# startIndex Start index of the array
+	li $a3, 7		# endIndex End index of the array
+	addi $sp, $sp, -4	# make space on stack to store 4 bytes
+	sw $s7, 0($sp)		# save fd on stack
+	jal recursiveFindMajorityElement
+	addi $sp, $sp, 4	# restore space on the stack
+
 	
 exit_program:
 	li   $v0, 16		# system call for close file
@@ -35,6 +44,8 @@ exit_program:
 	syscall
 
 .data
+	list: .word 1, 2, 2, 4, 1, 4, 4, 4, -1
 	fout:   .asciiz "testout.txt"      # filename for output
+
 
 .include "hw4.asm"

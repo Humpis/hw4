@@ -1,12 +1,6 @@
-23330bears( 99, 129, 53, 4 )
-bears( 152, 129, 53, 3 )
-bears( 205, 129, 53, 2 )
-bears( 258, 129, 53, 1 )
-bears( 311, 129, 53, 0 )
+recursiveFindMajorityElement( 0, 7, 8 )
+recursiveFindMajorityElement( 0, 3, 4 )
+recursiveFindMajorityElement( 0, 1, 2 )
+recursiveFindMajorityElement( 0, 0, 1 )
 return: 0
-bears( 129, 129, 53, 0 )
-return: 1
-return: 1
-return: 1
-return: 1
-return: 1
+recursiveFindMajorityElement( 1, 1, 1 )
