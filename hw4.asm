@@ -161,6 +161,83 @@ checkN:
 	j bearsDone
 	
 checkRecurse1:
+	add $a0, $s0, $s2		# initial+increment
+	move $a1, $s1			# goal
+	move $a2, $s2			# increment
+	addi $a3, $s3, -1		# n - 1
+	addi $sp, $sp, -4		# make space on stack to store 4 bytes
+	sw $s4, 0($sp)			# save fd on stack
+	jal bears
+	addi $sp, $sp, 4		# restore space on the stack
+	bne $v0, 1, checkRecurse2	# else if (bears(initial+increment, goal, increment, n-1) == 1){
+	# write(fd, "return: ", 8);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringReturn 		# address of buffer from which to write
+	li   $a2, 8       		# hardcoded buffer length
+	syscall
+	# itof(1, fd);
+	li $a0, 1			# load 1
+	move $a1, $s4			# move fd
+	# write(fd, "\n", 1);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringLn 		# address of buffer from which to write
+	li   $a2, 1       		# hardcoded buffer length
+	syscall 
+	li $v0, 1			# return 1;
+	j bearsDone
+
+checkRecurse2:
+	li $t0, 2			# for mod
+	div $s0, $t0			# initial mod 2
+	mfhi $t0			# move remainder to t0
+	bnez $t0, bearsElse		# else if ((initial % 2 == 0) {
+	sra $a0, $s0, 1			# initial/2
+	move $a1, $s1			# goal
+	move $a2, $s2			# increment
+	addi $a3, $s3, -1		# n - 1
+	addi $sp, $sp, -4		# make space on stack to store 4 bytes
+	sw $s4, 0($sp)			# save fd on stack
+	jal bears
+	addi $sp, $sp, 4		# restore space on the stack
+	bne $v0, 1, bearsElse		# else if (bears(initial/2, goal, increment, n-1) == 1)){
+	# write(fd, "return: ", 8);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringReturn 		# address of buffer from which to write
+	li   $a2, 8       		# hardcoded buffer length
+	syscall
+	# itof(1, fd);
+	li $a0, 1			# load 1
+	move $a1, $s4			# move fd
+	# write(fd, "\n", 1);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringLn 		# address of buffer from which to write
+	li   $a2, 1       		# hardcoded buffer length
+	syscall
+	li $v0, 1			# return 1;
+	j bearsDone
+	
+bearsElse:
+	# write(fd, "return: ", 8);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringReturn 		# address of buffer from which to write
+	li   $a2, 8       		# hardcoded buffer length
+	syscall
+	# itof(0, fd);
+	li $a0, 0			# load 0
+	move $a1, $s4			# move fd
+	# write(fd, "\n", 1);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringLn 		# address of buffer from which to write
+	li   $a2, 1       		# hardcoded buffer length
+	syscall
+	li $v0, 0			# return 1;
+	j bearsDone
 	
 bearsDone:
 	lw $ra, 20($sp)			# restore from stack

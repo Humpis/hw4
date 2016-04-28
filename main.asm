@@ -11,8 +11,8 @@ main:
 	move $s7, $v0		# save the file descriptor
 	move $a1, $v0		# save the file descriptor to go into functions
 	
-	li $a0, -12332323		# store the int to write in a0
-	#jal itof		# do the first function
+	li $a0, 23330		# store the int to write in a0
+	jal itof		# do the first function
 	
 
 	
