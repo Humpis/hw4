@@ -11,14 +11,26 @@ main:
 	move $s7, $v0		# save the file descriptor
 	move $a1, $v0		# save the file descriptor to go into functions
 	
-	li $a0, 123		# store the int to write in a0
-	jal itof		# do the first function
+	li $a0, -12332323		# store the int to write in a0
+	#jal itof		# do the first function
 	
+
+	
+	# part 2
+	li $a0, 99		#  initial Number of bears given by your friend 
+	li $a1, 93		# goal The desired number of bears
+	li $a2, 53		# increment Number of bears to ask your friend for
+	li $a3, 4		# n The number of steps left in the game
+	addi $sp, $sp, -4	# make space on stack to store 4 bytes
+	sw $s7, 0($sp)		# save fd on stack
+	jal bears
+	addi $sp, $sp, 4	# restore space on the stack
+	
+exit_program:
 	li   $v0, 16		# system call for close file
 	move $a0, $s7		# file descriptor to close
 	syscall			# close file
 	
-exit_program:
 	li $v0, 10
 	syscall
 
