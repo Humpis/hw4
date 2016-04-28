@@ -18,7 +18,7 @@ main:
 	
 	# part 2
 	li $a0, 99		#  initial Number of bears given by your friend 
-	li $a1, 93		# goal The desired number of bears
+	li $a1, 129		# goal The desired number of bears
 	li $a2, 53		# increment Number of bears to ask your friend for
 	li $a3, 4		# n The number of steps left in the game
 	addi $sp, $sp, -4	# make space on stack to store 4 bytes

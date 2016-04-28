@@ -18,7 +18,6 @@ itof:
 	addi $a0, $a0, 1		# make it twos compliment
 	
 makeAsciiLoop:
-	blez $a0, checkNegative		# while( $a0 > 0 )
 	li $t2, 10			# for dividing. t2 can be reused
 	div $a0, $t2			# Divide $a0 by 10
 	mflo $a0			# save the quotient back into a0
@@ -27,6 +26,7 @@ makeAsciiLoop:
 	addi $sp, $sp, -1		# make space on stack to store 1 byte
 	sb $t2, 0($sp)			# save ascii char on stack
 	addi $t0, $t0, 1		# Increment the counter for number of digits
+	blez $a0, checkNegative		# while( $a0 > 0 )
 	j makeAsciiLoop
 
 checkNegative:
@@ -121,7 +121,7 @@ bears:
 	syscall 
 
 checkInitialGoal:			# this is never jumped to
-	bne $s1, $s2, checkN		# if (initial == goal){
+	bne $s0, $s1, checkN		# if (initial == goal){
 	# write(fd, "return: ", 8);
 	li   $v0, 15       		# system call for write to file
 	move $a0, $s4      		# file descriptor 
@@ -131,6 +131,7 @@ checkInitialGoal:			# this is never jumped to
 	# itof(1, fd);
 	li $a0, 1			# load 1
 	move $a1, $s4			# move fd
+	jal itof
 	# write(fd, "\n", 1);
 	li   $v0, 15       		# system call for write to file
 	move $a0, $s4      		# file descriptor 
@@ -151,6 +152,7 @@ checkN:
 	# itof(0, fd);
 	li $a0, 0			# load 0
 	move $a1, $s4			# move fd
+	jal itof
 	# write(fd, "\n", 1);
 	li   $v0, 15       		# system call for write to file
 	move $a0, $s4      		# file descriptor 
@@ -179,6 +181,7 @@ checkRecurse1:
 	# itof(1, fd);
 	li $a0, 1			# load 1
 	move $a1, $s4			# move fd
+	jal itof
 	# write(fd, "\n", 1);
 	li   $v0, 15       		# system call for write to file
 	move $a0, $s4      		# file descriptor 
@@ -211,6 +214,7 @@ checkRecurse2:
 	# itof(1, fd);
 	li $a0, 1			# load 1
 	move $a1, $s4			# move fd
+	jal itof
 	# write(fd, "\n", 1);
 	li   $v0, 15       		# system call for write to file
 	move $a0, $s4      		# file descriptor 
@@ -230,6 +234,7 @@ bearsElse:
 	# itof(0, fd);
 	li $a0, 0			# load 0
 	move $a1, $s4			# move fd
+	jal itof
 	# write(fd, "\n", 1);
 	li   $v0, 15       		# system call for write to file
 	move $a0, $s4      		# file descriptor 

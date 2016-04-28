@@ -1,24 +1,12 @@
-23330bears( 99, 93, 53, 4 )
-bears( 152, 93, 53, 3 )
-bears( 205, 93, 53, 2 )
-bears( 258, 93, 53, 1 )
-bears( 311, 93, 53,  )
-return: 
-bears( 129, 93, 53,  )
-return: 
-return: 
-return: 
-bears( 76, 93, 53, 2 )
-bears( 129, 93, 53, 1 )
-bears( 182, 93, 53,  )
-return: 
-return: 
-bears( 38, 93, 53, 1 )
-bears( 91, 93, 53,  )
-return: 
-bears( 19, 93, 53,  )
-return: 
-return: 
-return: 
-return: 
-return: 
+23330bears( 99, 129, 53, 4 )
+bears( 152, 129, 53, 3 )
+bears( 205, 129, 53, 2 )
+bears( 258, 129, 53, 1 )
+bears( 311, 129, 53, 0 )
+return: 0
+bears( 129, 129, 53, 0 )
+return: 1
+return: 1
+return: 1
+return: 1
+return: 1
