@@ -319,6 +319,7 @@ recursiveFindMajorityElement:
 	
 	li $t0, 1			# for checking if equal to 1
 	bne $s5, $t0, rfmeOuterElse	# if(array_length == 1){
+	sll $s2, $s2, 2			# to align to word
 	add $t0, $s0, $s2		# t0 = pointer for array[startIndex]
 	lw $t0, ($t0)			# t0 = array[startIndex]
 	bne $s1, $t0, rfmeInnerElse	# if(candidate == array[startIndex]){
@@ -451,7 +452,7 @@ iterateCandidates:
 icEndIndexLoop:
 	lw $t0, ($a0)			# inputArray[endIndex]
 	beq $t0, -1, icEndFound		# while(input_array[end_index] != -1){
-	addi $a0, $a0, 1		# increment array
+	addi $a0, $a0, 4		# increment array
 	addi $s1, $s1, 1		# end_index++;
 	j icEndIndexLoop
 
@@ -461,6 +462,7 @@ icEndFound:
 
 icForLoop:
 	bgt $s3, $s1, icNotFound	#  for(int i = 0; i <= end_index; i++){ 
+	sll $s3, $s3, 2			# to align to word
 	#write(fd, "candidate: ", 11);
 	li   $v0, 15       		# system call for write to file
 	move $a0, $s4      		# file descriptor 
@@ -518,6 +520,7 @@ icForLoop:
 	j icDone
 	
 icForLoopIterate:
+	srl $s3, $s3, 2			# to unalign to word
 	addi $s3, $s3, 1		# i++
 	j icForLoop
 	
