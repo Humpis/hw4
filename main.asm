@@ -31,8 +31,12 @@ main:
 	li $a3, 7		# endIndex End index of the array
 	addi $sp, $sp, -4	# make space on stack to store 4 bytes
 	sw $s7, 0($sp)		# save fd on stack
-	jal recursiveFindMajorityElement
+	#jal recursiveFindMajorityElement
 	addi $sp, $sp, 4	# restore space on the stack
+	
+	la $a0, list		# input_array Integer array
+	move $a1, $s7		# move fd
+	jal iterateCandidates
 
 	
 exit_program:
@@ -44,8 +48,8 @@ exit_program:
 	syscall
 
 .data
-	list: .word 1, 2, 2, 4, 1, 4, 4, 4, -1
-	fout:   .asciiz "testout.txt"      # filename for output
+list: .word 1, 2, 2, 4, 1, 4, 4, 4, -1
+fout:   .asciiz "testout.txt"      # filename for output
 
 
 .include "hw4.asm"

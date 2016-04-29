@@ -392,6 +392,7 @@ rfmeOuterElse:
 	move $a1, $s1			# move candidate
 	add $a2, $s2, $t0		# move startindex = start + mid
 	move $a3, $s3			# move endindex
+	addi $sp, $sp, -4		# make space on stack to store 4 bytes
 	sw $s4, 0($sp)			# save fd on stack
 	jal recursiveFindMajorityElement
 	addi $sp, $sp, 4		# restore space on the stack
@@ -433,6 +434,122 @@ rfmeDone:
 
 #iterateCandidates function
 iterateCandidates:
+	addi $sp, $sp, -28		# make space on stack to store 4 bytes
+	sw $s5, 24($sp)			
+	sw $ra, 20($sp)			# store return adress
+	sw $s0, 16($sp)			# save to stack
+	sw $s1, 12($sp)			# save to stack
+	sw $s2, 8($sp)			# save to stack
+	sw $s3, 4($sp)			# save to stack
+	sw $s4, 0($sp)			# save to stack
+
+	move $s0, $a0			# save input array
+	move $s4, $a1			# save fd	
+	li $s1, 0			# end index
+	li $s2, 0			# start index
+
+icEndIndexLoop:
+	lw $t0, ($a0)			# inputArray[endIndex]
+	beq $t0, -1, icEndFound		# while(input_array[end_index] != -1){
+	addi $a0, $a0, 1		# increment array
+	addi $s1, $s1, 1		# end_index++;
+	j icEndIndexLoop
+
+icEndFound:
+	addi $s1, $s1, -1		# end_index--;
+	li $s3, 0 			# i
+
+icForLoop:
+	bgt $s3, $s1, icNotFound	#  for(int i = 0; i <= end_index; i++){ 
+	#write(fd, "candidate: ", 11);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringCandidate 	# address of buffer from which to write
+	li   $a2, 11       		# hardcoded buffer length
+	syscall
+	# itof(input_array[i], fd);
+	add $t0, $s0, $s3		# pointer to input_array[i]
+	lw $a0, ($t0)			# input_array[i]
+	move $a1, $s4			# move fd
+	jal itof
+	# write(fd, "\n", 1);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringLn 		# address of buffer from which to write
+	li   $a2, 1       		# hardcoded buffer length
+	syscall
+	
+	# int candidate_sum = recursiveFindMajorityElement(input_array, input_array[i], start_index, end_index, fd);
+	move $a0, $s0			# move input array
+	add $t0, $s0, $s3		# pointer to input_array[i]
+	lw $a1, ($t0)			# input_array[i]
+	move $a2, $s2			# start index
+	move $a3, $s1			# end index
+	addi $sp, $sp, -4		# make space on stack to store 4 bytes
+	sw $s4, 0($sp)			# save fd on stack
+	jal recursiveFindMajorityElement
+	addi $sp, $sp, 4		# restore space on the stack
+	move $s5, $v0			# candiate sum
+	
+	# if (candidate_sum >= ((end_index + 1)/ 2)){
+	addi $t0, $s1, 1		# endindex++
+	sra $t0, $t0, 1			# ^^/2
+	blt $s5, $t0, icForLoopIterate	# if the following is not applicable, loop again
+	# write(fd, "majority element: ", 18);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringMaj 		# address of buffer from which to write
+	li   $a2, 18      		# hardcoded buffer length
+	syscall
+	# itof(input_array[i], fd);
+	add $t0, $s0, $s3		# pointer to input_array[i]
+	lw $a0, ($t0)			# input_array[i]
+	move $a1, $s4			# move fd
+	jal itof
+	# write(fd, "\n", 1);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringLn 		# address of buffer from which to write
+	li   $a2, 1       		# hardcoded buffer length
+	syscall
+	# return input_array[i];
+	add $t0, $s0, $s3		# pointer to input_array[i]
+	lw $v0, ($t0)			# input_array[i]
+	j icDone
+	
+icForLoopIterate:
+	addi $s3, $s3, 1		# i++
+	j icForLoop
+	
+icNotFound:
+	# write(fd, "majority element: ", 18);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringMaj 		# address of buffer from which to write
+	li   $a2, 18      		# hardcoded buffer length
+	syscall
+	# itof(-1, fd);
+	li $a0, -1			# load -1
+	move $a1, $s4			# move fd
+	jal itof
+	# write(fd, "\n", 1);
+	li   $v0, 15       		# system call for write to file
+	move $a0, $s4      		# file descriptor 
+	la   $a1, stringLn 		# address of buffer from which to write
+	li   $a2, 1       		# hardcoded buffer length
+	syscall
+	# return -1;
+	li $v0, -1			
+
+icDone:
+	lw $s5, 24($sp)	
+	lw $ra, 20($sp)			# restore from stack
+	lw $s0, 16($sp)			# restore from stack
+	lw $s1, 12($sp)			# restore from stack
+	lw $s2, 8($sp)			# restore from stack
+	lw $s3, 4($sp)			# restore from stack
+	lw $s4, 0($sp)			# restore from stack
+	addi $sp, $sp, 28		# restore space on stack to store 4 bytes
 	jr $ra
 
 
@@ -453,3 +570,5 @@ stringParaLn: .asciiz " )\n"
 stringReturn: .asciiz "return: "
 stringLn: .asciiz "\n"
 stringRFME: .asciiz "recursiveFindMajorityElement( "
+stringCandidate: .asciiz "candidate: "
+stringMaj: .asciiz "majority element: "
